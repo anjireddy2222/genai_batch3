@@ -61,7 +61,7 @@ prompt types
 
     based on technologies, experince, company type, -> conduct mock interview
 
-# Input data or business knowledge
+# Input data, business knowledge
 
     Courses, each course details, 
 
@@ -90,6 +90,9 @@ prompt types
     JSON format
 
     XML
+    <data>
+        <ai_reply></ai_reply>
+    </data>
 
     {
         "ai_reply": "",
@@ -97,8 +100,12 @@ prompt types
         "lead_score": "cold/warm/hot",
         "is_paid_student": "",
         "is_requesting_call": "true or false",
-        "call_time": "date and time in IST"
+        "call_time": "date and time in IST",
+        "suggest_replies_for_user": ["", "", ""]
     }
+
+
+    
 
 
 
