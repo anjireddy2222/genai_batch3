@@ -2,9 +2,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import openai
+import os
+from dotenv import load_dotenv
+
 
 app = FastAPI()
-
+load_dotenv()
 
 # Path -> http method -> python method -> response return
 
@@ -64,13 +67,13 @@ def chat_func( req : ApiRequestData ):
     User message: { req.user_message }
     """
 
-    general_prompt = f"""
-    You are AI assitant, answer user queries. 
-    User message: { req.user_message }
-    """
+    # general_prompt = f"""
+    # You are AI assitant, answer user queries. 
+    # User message: { req.user_message }
+    # """
 
-    openai_client = openai.OpenAI( api_key="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" )
-    ai_response = openai_client.responses.create( model="", input=general_prompt  )
+    openai_client = openai.OpenAI( api_key=os.getenv("OPENAI_API_KEY") )
+    ai_response = openai_client.responses.create( model="gpt-5.5", input=prompt  )
 
 
 
@@ -81,5 +84,13 @@ def chat_func( req : ApiRequestData ):
 
 
 
+"""
+user message
+get conversation history
+get business knowledge
+build prompt
 
+send to ai
+
+"""
 
