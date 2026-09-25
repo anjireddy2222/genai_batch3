@@ -13,7 +13,7 @@ projectx_db
 # connect
 
 server ip or domain
-    127.0.0.1
+    127.0.0.1 localhost
     xyz-db.awsrds.com
 
 user: root
