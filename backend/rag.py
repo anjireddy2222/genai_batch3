@@ -10,9 +10,9 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-openai_client = openai.OpenAI( api_key= "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")
+openai_client = openai.OpenAI( api_key= "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")
 chromdb_client = chromadb.PersistentClient("./vector_db")
-courses_collection = chromdb_client.get_or_create_collection(name="courses3")
+courses_collection = chromdb_client.get_or_create_collection(name="courses_data")
 terms_collection = chromdb_client.get_or_create_collection(name="terms_privacy_data")
 
 def process_pdf(file):
@@ -121,6 +121,7 @@ def rag_chat( req : RagChatInputData ):
     vector_data = vectors.data[0].embedding
 
     embed_results = courses_collection.query( query_embeddings=[vector_data], n_results = 3 )
+    embed_results = embed_results['documents'][0]
     business_knowledge = ""
     for embed in embed_results:
         business_knowledge = business_knowledge + " " + embed
@@ -142,7 +143,7 @@ def rag_chat( req : RagChatInputData ):
         8. dont imagine and give answers, if the data is not availbale in our business knowledge, connect with our team.
 
         Business data:
-        {business_knowledge}
+        { business_knowledge }
     
         User message: { req.user_msg }
     """

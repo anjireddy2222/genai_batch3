@@ -99,10 +99,11 @@ def chat_func( req : ApiRequestData ):
     db_cursor.execute(insert_query, (req.user_message, "user", req.conv_id))
 
     insert_query = "insert into conv_messages(message, message_from, conv_id) values(%s, %s, %s);"
-    db_cursor.execute(insert_query, (ai_response.output_text, "assistant", req.conv_id ))
+    db_cursor.execute( insert_query, (ai_response.output_text, "assistant", req.conv_id ) )
 
-    db_con.commit()
-    db_con.close()
+    db_con.commit( )
+    
+    db_con.close( )
 
 
 
