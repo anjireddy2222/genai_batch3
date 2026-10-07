@@ -6,12 +6,14 @@ pip install llama-index
 pip install llama-index-llms-openai
 
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 from llama_index.core import VectorStoreIndex
 from llama_index.core import SimpleDirectoryReader
 from llama_index.llms.openai import OpenAI
 from dotenv import load_dotenv
+from pathlib import Path
+import uuid
 
 load_dotenv()
 
@@ -21,6 +23,21 @@ class LlamaChatReq(BaseModel):
     user_msg: str
 
 
+@app.post("/upload-file")
+async def upload_file( file : UploadFile = File(...) ):
+
+    upload_folder_name = "business_knowledge"
+    file_name = str(uuid.uuid4()) + ".pdf"
+
+    UPLOAD_DIR = Path(upload_folder_name)
+    file_path = UPLOAD_DIR / file_name
+
+    with file_path.open("wb") as buffer:
+        while chunk := await file.read(1 * 1024 * 1024):
+            buffer.write(chunk)
+    
+
+    return { "message": file, "data": { "file_name": file_name , "file_path": file_path } }
 
 
 @app.post("/chat")
@@ -59,7 +76,7 @@ def llama_chat( req : LlamaChatReq ):
 
     ai_response = query_engine.query(prompt)
 
-    return { "message": ai_response }
+    return { "message": ai_response, "documents": documents }
 
 
 
