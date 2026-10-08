@@ -45,7 +45,7 @@ def llama_chat( req : LlamaChatReq ):
 
     documents = SimpleDirectoryReader("business_knowledge").load_data()
 
-    # print( documents )
+    print( documents )
 
     index = VectorStoreIndex.from_documents(documents)
 

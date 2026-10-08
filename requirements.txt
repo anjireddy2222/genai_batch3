@@ -1,0 +1,9 @@
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-dotenv>=1,<2
+python-multipart>=0.0.18,<1
+llama-index-core>=0.14.25,<0.15
+llama-index-llms-openai>=0.7.10,<0.8
+llama-index-embeddings-openai>=0.6,<0.7
+llama-index-readers-file>=0.5,<0.6
+pypdf>=6,<7
