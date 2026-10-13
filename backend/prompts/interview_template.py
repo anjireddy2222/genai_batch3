@@ -12,7 +12,6 @@ Rules:
 8. DOnt ask any personal questions
 
 Candidate Details:
-Name: {name}
 Expereince: {exp}
 technologies:{technologies}
 country: {country}
@@ -34,8 +33,5 @@ Always return out in json format only, dont include code blocks or quotes
     "is_interview_completed": "yes or no",
     "final_interview_result": "selected or rejected"
 }}
-
-AI Question: {question}
-Candidate Answer: {user_answer}
 
 """

@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from langchain_core.prompts import PromptTemplate
 from prompts.interview_template import interview_prompt_template
 import json
+import pymysql
 
 load_dotenv()
 
@@ -26,12 +27,9 @@ if selected send offer letter -> email
 
 
 class InterviewInputData(BaseModel):
-    name: str
-    experience: str
-    technologies: str
-    country: str
-    ai_question: str
-    user_answer: str
+    interview_id: str
+    user_id: str
+    user_message: str
 
 class InterViewResponse(BaseModel):
     next_question: str
@@ -45,15 +43,52 @@ class InterViewResponse(BaseModel):
     final_interview_result: str
 
 
+def get_db_connection():
+    return pymysql.connect(host="localhost", database="interview_db", password="15081947", user="root", port=3307, cursorclass=pymysql.cursors.DictCursor)
+
+
 @app.post("/chat")
 def lc_chat( req : InterviewInputData ):
 
+    db_con = get_db_connection()
+    db_cursor = db_con.cursor()
+    # get interview details
+    get_query = "select * from interview_details where interview_id = %s and user_id = %s ;"
+    db_cursor.execute(get_query, ( req.interview_id, req.user_id  ))
+    interview_details = db_cursor.fetchall()
+    experience = ""
+    technologies = ""
+    country = ""
+    for row in interview_details:
+        experience = row["exp"]
+        technologies = row["technologies"]
+        country = row["country"]
+
+    # save user message
+    insert_query = "insert into interview_chats(interview_id, user_id, message, msg_role) values(%s,%s,%s,%s )"
+    db_cursor.execute(insert_query, ( req.interview_id, req.user_id, req.user_message, "user" ))
+    db_con.commit()
+
+    # get interview history
+    get_query = "select * from interview_chats where interview_id = %s and user_id = %s ;"
+    db_cursor.execute(get_query, (req.interview_id, req.user_id))
+    history_details = db_cursor.fetchall()
+    history = ""
+    for row in history_details:
+        history = history + f"role: {row["msg_role"]} and content: {row["message"]} "
+
+
     template = PromptTemplate.from_template(interview_prompt_template)
-    prompt = template.format( name=req.name, exp=req.experience, technologies=req.technologies, country=req.country, history="", question=req.ai_question, user_answer=req.user_answer )
+    prompt = template.format( exp=experience, technologies=technologies, country=country, history=history )
 
     llm_client = ChatOpenAI(model="gpt-5.5")
     llm_client = llm_client.with_structured_output(InterViewResponse)
     response = llm_client.invoke(prompt)
+
+    db_cursor.execute(insert_query, (req.interview_id, req.user_id, response.next_question, "assistant"  ))
+    db_con.commit()
+
+
 
     
 
