@@ -6,6 +6,8 @@ from langchain_core.prompts import PromptTemplate
 from prompts.interview_template import interview_prompt_template
 import json
 import pymysql
+from langchain.tools import tool
+from tools.interview_tools import send_email, create_offer_letter
 
 load_dotenv()
 
@@ -65,9 +67,9 @@ def lc_chat( req : InterviewInputData ):
         country = row["country"]
 
     # save user message
-    insert_query = "insert into interview_chats(interview_id, user_id, message, msg_role) values(%s,%s,%s,%s )"
-    db_cursor.execute(insert_query, ( req.interview_id, req.user_id, req.user_message, "user" ))
-    db_con.commit()
+    # insert_query = "insert into interview_chats(interview_id, user_id, message, msg_role) values(%s,%s,%s,%s )"
+    # db_cursor.execute(insert_query, ( req.interview_id, req.user_id, req.user_message, "user" ))
+    # db_con.commit()
 
     # get interview history
     get_query = "select * from interview_chats where interview_id = %s and user_id = %s ;"
@@ -82,11 +84,24 @@ def lc_chat( req : InterviewInputData ):
     prompt = template.format( exp=experience, technologies=technologies, country=country, history=history )
 
     llm_client = ChatOpenAI(model="gpt-5.5")
-    llm_client = llm_client.with_structured_output(InterViewResponse)
+    # llm_client = llm_client.with_structured_output(InterViewResponse)
+    llm_client = llm_client.bind_tools( [ send_email, create_offer_letter  ] )
     response = llm_client.invoke(prompt)
 
-    db_cursor.execute(insert_query, (req.interview_id, req.user_id, response.next_question, "assistant"  ))
-    db_con.commit()
+    if len(response.tool_calls) > 0 :
+        print("tools calling")
+
+        for tool in response.tool_calls:
+            if tool["name"] == "send_email":
+                print("send_email tool calling")
+                send_email.invoke(tool["args"])
+
+            if tool["name"] == "create_offer_letter":
+                print("create_offer_letter tool calling")
+                create_offer_letter.invoke(tool["args"])
+
+    # db_cursor.execute(insert_query, (req.interview_id, req.user_id, response.next_question, "assistant"  ))
+    # db_con.commit()
 
 
 

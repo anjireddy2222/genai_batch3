@@ -31,7 +31,12 @@ Always return out in json format only, dont include code blocks or quotes
     "ovrall_technical_rating": "0 to 10",
     "overall_communication_rating": "0 to 10",
     "is_interview_completed": "yes or no",
-    "final_interview_result": "selected or rejected"
+    "final_interview_result": "selected or rejected",
+    "email_subject": "",
+    "email_body": ""
 }}
+
+Once interview completed, send email to candidate and copy HR managers and hiring manager in the email.
+if candidate is slected, generate offer letter.
 
 """
