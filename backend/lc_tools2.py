@@ -14,7 +14,12 @@ load_dotenv()
 
 llm_client = ChatOpenAI(model="gpt-5.5")
 
-api_wrapper = TextRequestsWrapper()
+headers = {
+    "Authorization": "Bearer jkfgakjfgakjsf379tguaksfjasjfbuw9t387tiugakfhakufhawiuf32r8723tgiaukfhaskfuwr378tiugafjgafugaiufwgiuwgqiuguifgwiu",
+    "API-Key": "skjfgakfjgkajgfakjggakjfakjGFKAJFGEHFASBGFSAKJ"
+}
+
+api_wrapper = TextRequestsWrapper( headers = headers )
 
 api_tool = RequestsGetTool( requests_wrapper=api_wrapper, allow_dangerous_requests=True )
 
