@@ -1,0 +1,37 @@
+
+Assessment 1
+
+Theory:
+
+Q1: Explain GenAI?
+
+Q2: Explain about Tokens?
+
+Q3: Explain RAG with example?
+
+Q4: Explain about conversation history?
+
+Q5: Write a good prompt for AI SUpport Agent for Ecommerce website?
+
+Q6: Difference between GenAI & Agent?
+
+Q7: What is a Tool and why we need them?
+
+
+Code:
+
+Q1: Create API to receive name, email, ticket id and return that received data as response?
+
+Q2: Create API to receive pdf and text file and read data and return that data as response?
+
+Q3: Create chat API, receive message from api and send it to openai llm and get response and send that ai response back as API response (no conversation history)?
+
+
+Send email to
+
+contact@softwareschool.co 
+
+Subject: Batch 3 - Assessment 1
+
+
+

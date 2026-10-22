@@ -12,7 +12,11 @@ app = FastAPI()
 
 openai_client = openai.OpenAI( api_key= "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")
 chromdb_client = chromadb.PersistentClient("./vector_db")
+
+
+
 courses_collection = chromdb_client.get_or_create_collection(name="courses_data")
+
 terms_collection = chromdb_client.get_or_create_collection(name="terms_privacy_data")
 
 def process_pdf(file):
@@ -24,8 +28,6 @@ def process_pdf(file):
 
     return data
 
-
-
 def process_doc(file):
     print("processing doc file")
     doc_reader = Document(file.file)
@@ -34,7 +36,6 @@ def process_doc(file):
         data = data + para.text
     
     return data
-
 
 def process_txt(file):
     print("processing text file")
