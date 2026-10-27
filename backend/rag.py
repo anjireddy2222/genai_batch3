@@ -60,10 +60,10 @@ a b c d e f
 0 1 2 3 4 5
 
 1000 chars
-length = 2 chars
-500 chunks
+length = 200 chars
+5 chunks
 
-0 -> 2 chars: 
+0 -> 200 chars: 
 
 """
 def convert_to_chunks(data):
