@@ -19,6 +19,7 @@ db_tool = QuerySQLDataBaseTool(db=db_con)
 
 class ChatRequest(BaseModel):
     msg: str
+    chart_type: str
 
 @app.post("/db-chat")
 def db_chat( req : ChatRequest ):
