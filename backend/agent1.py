@@ -5,6 +5,8 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from pydantic import BaseModel
 from langchain.tools import tool
+import middlware as md
+from langchain.agents.middleware import ModelRetryMiddleware, ModelFallbackMiddleware
 
 load_dotenv()
 
@@ -66,29 +68,45 @@ class AIResponse(BaseModel):
     user_mobile: str
 
 
-agent = create_agent("openai:gpt-5.5", system_prompt=prompt, tools=tools, response_format=AIResponse, name="ss_sales_agent")
+agent = create_agent("openai:gptanji-5647524.5", 
+                     system_prompt=prompt, 
+                     tools=tools, 
+                     response_format=AIResponse, 
+                     name="ss_sales_agent", 
+                     middleware=[
+                         md.LoggingMiddleware(),
+                         ModelRetryMiddleware(max_retries=4, max_delay=10),
+                         ModelFallbackMiddleware("openai:gpt-5.5")
+                     ]
+                     )
 
 
 @app.post("/chat")
 def chat( req: ChatRequest):
 
-    input_data = {
-        "messages": [
-            { "role": "user", "content": req.msg }
-        ]
-    }
+    try:
 
 
-    agent_reuslt = agent.invoke( input_data )
-    # send user message to ai
-    # tool calls detected and return to backend code
-    # execute tools
-    # send tool reults to ai
-    # generate response 
-    # agent_reuslt["structured_response"]
+        input_data = {
+            "messages": [
+                { "role": "user", "content": req.msg }
+            ]
+        }
+
+
+        agent_reuslt = agent.invoke( input_data )
+        # send user message to ai
+        # tool calls detected and return to backend code
+        # execute tools
+        # send tool reults to ai
+        # generate response 
+        # agent_reuslt["structured_response"]
 
 
 
 
-    return { "data": agent_reuslt }
+        return { "data": agent_reuslt }
+    
+    except Exception as e:
+        print(f"###\n Exception {e}")
 
