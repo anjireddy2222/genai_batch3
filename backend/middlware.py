@@ -4,17 +4,21 @@ from langchain.agents.middleware import AgentMiddleware
 class LoggingMiddleware(AgentMiddleware):
 
     def before_agent(self, state, runtime):
-        print(f"####\nnn before running agent {state}")
-        print(f"runtime: {runtime}\n####")
+        states = ""
+        print(f"####\nnn before running agent {states}")
+        # print(f"runtime: {runtime}\n####")
 
     def after_agent(self, state, runtime):
-        print(f"#####\n after running agent {state}")
+        states = ""
+        print(f"#####\n after running agent {states}")
 
     def before_model(self, state, runtime):
-        print(f"####\n before running mdoel {state}")
+        states = ""
+        print(f"####\n before running mdoel {states}")
 
     def after_model(self, state, runtime):
-        print(f"####\n after running model {state}")
+        states = ""
+        print(f"####\n after running model {states}")
 
 
     
