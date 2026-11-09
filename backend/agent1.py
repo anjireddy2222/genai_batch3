@@ -86,19 +86,19 @@ class AIResponse(BaseModel):
 
 
 agent = create_agent("openai:gptanji-5647524.5", 
-                     system_prompt=prompt, 
-                     tools=tools, 
-                     response_format=AIResponse, 
-                     name="ss_sales_agent", 
-                     middleware=[
-                         md.LoggingMiddleware(),
-                         ModelRetryMiddleware(max_retries=4, max_delay=10),
-                         ModelFallbackMiddleware("openai:gpt-5.5"),
-                         ToolRetryMiddleware(max_retries=4, max_delay=10),
-                         ToolCallLimitMiddleware(run_limit=20, tool_name="get_course_name", exit_behavior="error"),
-                         ModelCallLimitMiddleware(run_limit=10, exit_behavior="error")
-                     ]
-                     )
+        system_prompt=prompt, 
+        tools=tools, 
+        response_format=AIResponse, 
+        name="ss_sales_agent", 
+        middleware=[
+            md.LoggingMiddleware(),
+            ModelRetryMiddleware(max_retries=4, max_delay=10),
+            ModelFallbackMiddleware("openai:gpt-5.5"),
+            ToolRetryMiddleware(max_retries=4, max_delay=10),
+            ToolCallLimitMiddleware(run_limit=20, tool_name="get_course_name", exit_behavior="error"),
+            ModelCallLimitMiddleware(run_limit=10, exit_behavior="error")
+        ]
+        )
 
 
 @app.post("/chat")
